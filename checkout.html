@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — GLOSSY</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <style>
+    .co-hero { padding: var(--space-lg) 0 var(--space-md); text-align: center; background: linear-gradient(135deg, var(--color-bg) 0%, var(--color-bg-warm) 100%); }
+    .co-hero .section-title { font-size: clamp(2rem, 4vw, 3rem); }
+    .co-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-lg); padding: var(--space-lg) 0 var(--space-xl); align-items: start; }
+    .co-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-md); margin-bottom: var(--space-sm); }
+    .co-card h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 500; margin-bottom: var(--space-sm); display: flex; gap: .7rem; align-items: center; }
+    .co-card h3 span { width: 28px; height: 28px; border-radius: 50%; background: var(--color-text); color: #fff; font-family: var(--font-body); font-size: .8rem; display: inline-flex; align-items: center; justify-content: center; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); }
+    .form-group { margin-bottom: var(--space-sm); }
+    .form-group label { display: block; font-size: .7rem; font-weight: 500; letter-spacing: .15em; text-transform: uppercase; margin-bottom: .4rem; }
+    .form-group input, .form-group textarea { width: 100%; padding: .85rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); font-family: var(--font-body); font-size: .9rem; color: var(--color-text); background: var(--color-bg); outline: none; transition: var(--transition); }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--color-accent); box-shadow: 0 0 0 3px rgba(156,124,92,.1); }
+    .form-group input:user-invalid { border-color: #c0392b; }
+    .form-group textarea { min-height: 90px; resize: vertical; }
+    .choice { display: flex; gap: .9rem; align-items: flex-start; padding: .9rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); margin-bottom: .6rem; cursor: pointer; transition: var(--transition); }
+    .choice:has(input:checked) { border-color: var(--color-accent); background: var(--color-bg-warm); }
+    .choice input { margin-top: .3rem; accent-color: var(--color-accent); }
+    .choice b { display: block; font-size: .92rem; font-weight: 500; }
+    .choice small { color: var(--color-text-light); font-size: .78rem; }
+    .choice .choice-price { margin-left: auto; font-size: .88rem; white-space: nowrap; }
+    .code-row { display: flex; gap: .6rem; margin-top: .6rem; }
+    .code-row input { flex: 1; padding: .7rem 1rem; border: 1px solid var(--color-border); border-radius: var(--radius-sm); background: var(--color-bg); text-transform: uppercase; }
+    .code-row button { padding: 0 1.2rem; border: 1px solid var(--color-text); border-radius: var(--radius-sm); font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; }
+    .code-msg { font-size: .78rem; margin-top: .4rem; min-height: 1.1em; color: var(--color-text-light); }
+    .co-summary { position: sticky; top: 90px; }
+    .co-summary .cart-item:last-of-type { border-bottom: 0; }
+    .sum-row { display: flex; justify-content: space-between; font-size: .9rem; padding: .35rem 0; color: var(--color-text-light); }
+    .sum-row.saving { color: #3d7a4f; }
+    .sum-row.total { color: var(--color-text); font-size: 1.15rem; border-top: 1px dashed var(--color-border); margin-top: .5rem; padding-top: .8rem; }
+    .co-note { font-size: .76rem; color: var(--color-text-light); margin: .8rem 0 1rem; }
+    .co-submit { width: 100%; }
+    .co-empty, .co-done { text-align: center; padding: var(--space-xl) 0; }
+    .co-empty .btn, .co-done .btn { margin: .4rem; }
+    .co-done-icon { font-size: 3rem; }
+    .co-done h2 { font-family: var(--font-display); font-size: 2.2rem; font-weight: 500; margin: .5rem 0; }
+    .co-done p { color: var(--color-text-light); max-width: 520px; margin: 0 auto .6rem; }
+    .co-order-id { display: inline-block; background: var(--color-bg-warm); padding: .5rem 1.2rem; border-radius: 50px; letter-spacing: .12em; font-weight: 600; margin: .8rem 0 1.2rem; }
+    .co-recap { max-width: 460px; margin: 1.2rem auto; text-align: left; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: var(--space-sm) var(--space-md); }
+    @media (max-width: 900px) { .co-grid { grid-template-columns: 1fr; } .co-summary { position: static; order: -1; } }
+    @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="header" id="header">
+    <nav class="nav">
+      <div class="nav-left">
+        <a href="index.html" class="nav-link">Shop All</a>
+        <a href="index.html#categories" class="nav-link">Categories</a>
+        <a href="index.html#featured" class="nav-link">Featured</a>
+        <a href="#" class="nav-link">Gift Cards</a>
+      </div>
+      <a href="index.html" class="nav-logo"><img src="images/logo.png" alt="GLOSSY"></a>
+      <div class="nav-right">
+        <a href="#" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="index.html" class="nav-link" style="color: var(--color-accent);">← Continue Shopping</a>
+      </div>
+    </nav>
+  </header>
+
+  <section class="co-hero">
+    <div class="container">
+      <div class="section-label">Secure Checkout</div>
+      <h1 class="section-title">Complete Your Order</h1>
+    </div>
+  </section>
+
+  <main class="container">
+    <!-- Empty bag -->
+    <div class="co-empty" id="coEmpty" style="display:none;">
+      <div class="cart-empty-icon">🛍️</div>
+      <h2 class="section-title" style="font-size:2rem;">Your bag is empty</h2>
+      <p class="section-subtitle" style="margin:.8rem auto 1.5rem;">Add a few gifts to your bag and come back to check out.</p>
+      <a href="index.html#products" class="btn btn-primary">Browse Gifts</a>
+    </div>
+
+    <!-- Checkout form -->
+    <div class="co-grid" id="coGrid" style="display:none;">
+      <form id="checkoutForm">
+        <div class="co-card">
+          <h3><span>1</span> Contact</h3>
+          <div class="form-row">
+            <div class="form-group"><label for="name">Full Name</label><input type="text" id="name" name="name" autocomplete="name" required></div>
+            <div class="form-group"><label for="phone">Mobile (WhatsApp)</label><input type="tel" id="phone" name="phone" autocomplete="tel-national" inputmode="numeric" maxlength="10" pattern="[6-9][0-9]{9}" title="10-digit Indian mobile number" placeholder="98765 43210" required></div>
+          </div>
+          <div class="form-group"><label for="email">Email</label><input type="email" id="email" name="email" autocomplete="email" placeholder="you@example.com" required></div>
+        </div>
+
+        <div class="co-card">
+          <h3><span>2</span> Delivery Address</h3>
+          <div class="form-group"><label for="address">Address</label><input type="text" id="address" name="address" autocomplete="address-line1" placeholder="House no., street, area" required></div>
+          <div class="form-row">
+            <div class="form-group"><label for="city">City</label><input type="text" id="city" name="city" autocomplete="address-level2" required></div>
+            <div class="form-group"><label for="state">State</label><input type="text" id="state" name="state" autocomplete="address-level1" value="Tamil Nadu" required></div>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label for="pincode">PIN Code</label><input type="text" id="pincode" name="pincode" autocomplete="postal-code" inputmode="numeric" maxlength="6" pattern="[0-9]{6}" title="6-digit PIN code" required></div>
+            <div class="form-group"><label for="date">Preferred Delivery Date</label><input type="date" id="date" name="date" required></div>
+          </div>
+        </div>
+
+        <div class="co-card">
+          <h3><span>3</span> Delivery Method</h3>
+          <label class="choice"><input type="radio" name="shipping" value="standard" checked>
+            <div><b>Standard Delivery</b><small>2–4 business days · Free above ₹2,000</small></div><span class="choice-price" id="priceStandard">₹99</span></label>
+          <label class="choice"><input type="radio" name="shipping" value="express">
+            <div><b>Same-Day / Express</b><small>Order before 2 PM · Chennai &amp; select cities</small></div><span class="choice-price">₹249</span></label>
+        </div>
+
+        <div class="co-card">
+          <h3><span>4</span> Gift Options</h3>
+          <label class="choice"><input type="checkbox" name="wrap" id="wrap">
+            <div><b>Premium gift wrapping</b><small>Satin ribbon &amp; handwritten note</small></div><span class="choice-price" id="priceWrap">₹149</span></label>
+          <div class="form-group" style="margin-top:.8rem;"><label for="giftmsg">Gift Message (optional)</label><textarea id="giftmsg" name="giftmsg" maxlength="250" placeholder="Write a message for the recipient..."></textarea></div>
+          <div class="form-group" style="margin-bottom:0;"><label for="code">Promo Code</label>
+            <div class="code-row"><input type="text" id="code" placeholder="GLOSSY25"><button type="button" id="applyCode">Apply</button></div>
+            <div class="code-msg" id="codeMsg"></div></div>
+        </div>
+
+        <div class="co-card">
+          <h3><span>5</span> Payment</h3>
+          <label class="choice"><input type="radio" name="payment" value="upi" checked>
+            <div><b>Pay by UPI / Bank Transfer</b><small>We confirm your order on WhatsApp and share the payment details</small></div></label>
+          <label class="choice"><input type="radio" name="payment" value="cod">
+            <div><b>Cash on Delivery</b><small>Pay when your gift arrives</small></div></label>
+        </div>
+      </form>
+
+      <aside class="co-summary">
+        <div class="co-card">
+          <h3>Order Summary</h3>
+          <div id="coItems"></div>
+          <div id="coTotals"></div>
+          <p class="co-note">No online payment is taken on this site. Placing the order sends us your request, and we confirm it with you.</p>
+          <button type="submit" form="checkoutForm" class="btn btn-primary co-submit">Place Order</button>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Confirmation -->
+    <div class="co-done" id="coDone" style="display:none;">
+      <div class="co-done-icon">✨</div>
+      <h2>Thank You, <span id="doneName"></span>!</h2>
+      <div class="co-order-id" id="doneId"></div>
+      <p>Your order request is ready. To confirm it, please send it to us on WhatsApp — we’ll reply within 30 minutes (10 AM – 7 PM IST).</p>
+      <div class="co-recap" id="doneRecap"></div>
+      <a class="btn btn-primary" id="doneWa" target="_blank" rel="noopener">Send on WhatsApp</a>
+      <a class="btn btn-outline" id="doneMail">Send by Email</a>
+      <p style="margin-top:1.2rem;"><a href="index.html" style="text-decoration:underline;">Continue shopping</a></p>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top: var(--space-xl);">
+    <div class="container">
+      <div class="footer-bottom">
+        <span>&copy; 2026 GLOSSY. All rights reserved.</span>
+        <div class="footer-bottom-links"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"><span class="toast-icon">✓</span><span id="toastMsg"></span></div>
+
+  <script src="js/products.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
